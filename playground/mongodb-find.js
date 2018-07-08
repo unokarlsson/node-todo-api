@@ -34,7 +34,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(error,db) => {
     });
 
     // Count Todos
-   db.collection('Todos').find().count().then((count) => {
+    db.collection('Todos').find().count().then((count) => {
     console.log(`Todos count: ${count}`);
     },(error) => {
         console.log('Unable to fetch and count todos',error);
@@ -47,7 +47,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(error,db) => {
         console.log('Unable to fetch and count users with name Uno',error);
     });
 
-     // <Find the users named  Uno
+     // Find the users named  Uno
      db.collection('Users').find({name:'Uno'}).toArray().then((users) => {
         console.log(JSON.stringify(users,undefined,2));
     });
