@@ -5,8 +5,8 @@ var User = mongoose.model('User',{
         type: String,
         required: true,
         trim: true,
-        minLength: 3
+        minLength: 1
     }
 });
 
-module.export = {User};
+module.exports = {User};
