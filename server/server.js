@@ -23,11 +23,13 @@ app.post('/todos',(request,respons) => {
     });
 });
 
-app.get('/todos',(request,respons) => {
+app.get('/todos',(request,response) => {
     Todo.find().then((todos)  => {
-        respons.send({todos}); // Wrapped in an object so that other attributes can be added later
+        response.send({todos}); // Wrapped in an object so that other attributes can be added later
     },(error) => {
-        respons.status(400).send(error);
+        response.status(400).send(error);
+    }).catch((error) => {
+        responnse.status(500).send(error);
     });
 });
 
@@ -68,7 +70,7 @@ app.delete('/todos/:id',(request,respons) => {
 });
 */
 
-app.listen(3000,() => {
+app.listen(port,() => {
     console.log(`Started on ${port}`);
 });
 
