@@ -51,8 +51,7 @@ app.get('/todos/:id',(request,response) => {
     });
 });
 
-/*
-app.delete('/todos/:id',(request,respons) => {
+app.delete('/todos/:id',(request,response) => {
     const id = request.params.id;
 
     if(!ObjectID.isValid(id)) {
@@ -60,15 +59,15 @@ app.delete('/todos/:id',(request,respons) => {
     }
 
     Todo.findByIdAndRemove(id).then((todo) => {
-       if(todo) {
+       if(!todo) {
            return response.status(404).send();
        }
-       respons.send(todo);
+       response.send(todo);
     }).catch((error) => {
         response.status(400).send();
     });
 });
-*/
+
 
 app.listen(port,() => {
     console.log(`Started on ${port}`);
