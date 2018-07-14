@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// NOTE: The environment variable MONGOURL need to be set!!!
+// NOTE: The environment variable MONGODB_URI need to be set for production
 // Please check the mongourl.txt file.
 
 const MONGODB_URI = process.env.MONGODB_URI;

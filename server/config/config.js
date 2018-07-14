@@ -8,6 +8,6 @@ if(env==='development') {
     process.env.PORT = 3000;
     process.env.MONGODB_URI = "mongodb://localhost:27017/TodoAppTest";
 } else {
-    // 'production' case
-    process.env.MONGODB_URI = "mongodb://localhost:27017/TodoAppTest";
+    // production case
+    // How to set up the non heroku MONGODB_URI?
 }
