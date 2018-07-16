@@ -1,13 +1,15 @@
 require('./config/config');
 
 const _ = require('lodash');
-const {ObjectID}  = require('mongodb');
-const express     = require('express');
-const bodyParser  = require('body-parser');
+const {ObjectID}      = require('mongodb');
+const express         = require('express');
+const bodyParser      = require('body-parser');
 
-const {mongoose}  = require('./db/mongoose');
-const {Todo}      = require('./models/todo');
-const {User}      = require('./models/user');
+const {mongoose}      = require('./db/mongoose');
+const {Todo}          = require('./models/todo');
+const {User}          = require('./models/user');
+const {authenticate}  = require('./middelware/authenticate');
+
 
 const port =  process.env.PORT || 3000;
 
@@ -109,6 +111,10 @@ app.post('/users',(request,response) => {
     })
 });
 
+
+app.get('/users/me',authenticate,(request,response) => {
+    response.send(request.user);
+})
 
 app.listen(port,() => {
     console.log(`Started on ${port}`);
