@@ -51,6 +51,15 @@ UserSchema.methods.generateAuthToken = function () {
     });
 };
 
+UserSchema.methods.removeToken = function (token) {
+    var user = this;
+    return user.update({
+        $pull: {
+            tokens: { token }
+        }
+    }); 
+};
+
 // statics object is used to add method that is accessible without user object.
 // The this point to the model.
 UserSchema.statics.findByToken = function(token) {
