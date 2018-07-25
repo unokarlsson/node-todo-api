@@ -16,10 +16,11 @@ const port =  process.env.PORT || 3000;
 var app = express();
 app.use(bodyParser.json());
 
-app.post('/todos',(request,respons) => {
+app.post('/todos',authenticate,(request,respons) => {
     // console.log(request.body);
     var todo = new Todo({
-        text: request.body.text
+        text: request.body.text,
+        _creator: request.user._id
     });
     todo.save().then((doc)=>{
         respons.send(doc);
@@ -28,8 +29,10 @@ app.post('/todos',(request,respons) => {
     });
 });
 
-app.get('/todos',(request,response) => {
-    Todo.find().then((todos)  => {
+app.get('/todos',authenticate,(request,response) => {
+    Todo.find({
+        _creator: request.user._id
+    }).then((todos)  => {
         response.send({todos}); // Wrapped in an object so that other attributes can be added later
     },(error) => {
         response.status(400).send(error);
@@ -38,7 +41,7 @@ app.get('/todos',(request,response) => {
     });
 });
 
-app.get('/todos/:id',(request,response) => {
+app.get('/todos/:id',authenticate, (request,response) => {
     // response.send(request.params);
     var id = request.params.id;
 
@@ -46,7 +49,10 @@ app.get('/todos/:id',(request,response) => {
         return response.status(404).send();
     }
 
-    Todo.findById(id).then((todo) => {
+    Todo.findOne({
+        _id: id,
+        _creator: request.user._id
+    }).then((todo) => {
         if(!todo) {
             return response.status(404).send();
         }
@@ -56,14 +62,17 @@ app.get('/todos/:id',(request,response) => {
     });
 });
 
-app.delete('/todos/:id',(request,response) => {
+app.delete('/todos/:id',authenticate,(request,response) => {
     const id = request.params.id;
 
     if(!ObjectID.isValid(id)) {
         return response.status(404).send();
     }
 
-    Todo.findByIdAndRemove(id).then((todo) => {
+    Todo.findOneAndRemove({
+        _id: id,
+        _creator: request.user._id
+    }).then((todo) => {
        if(!todo) {
            return response.status(404).send();
        }
@@ -73,14 +82,14 @@ app.delete('/todos/:id',(request,response) => {
     });
 });
 
-app.patch('/todos/:id',(request,response) =>{
+app.patch('/todos/:id',authenticate,(request,response) =>{
     const id   = request.params.id;
-    const body = _.pick(request.body,['text','completed']);
+    let body = _.pick(request.body,['text','completed']);
 
     if(!ObjectID.isValid(id)) {
         return response.status(404).send();
     }
-
+   
     if(_.isBoolean(body.completed) && body.completed) {
         body.completedAt = new Date().getTime();
     } else {
@@ -88,7 +97,10 @@ app.patch('/todos/:id',(request,response) =>{
         body.completedAt = null;
     }
 
-    Todo.findByIdAndUpdate(id, {$set: body},{new:true}).then((todo)=> {
+    Todo.findOneAndUpdate({
+        _id: id,
+        _creator: request.user._id
+    }, {$set: body},{new:true}).then((todo)=> {
         if(!todo) {
             return response.status(404).send();
         }
