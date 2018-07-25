@@ -1,13 +1,15 @@
 const env = process.env.NODE_ENV || 'development';
-// console.log('env',env);
+console.log('env',env);
 
-if(env==='development') {
-    process.env.PORT = 3000;
-    process.env.MONGODB_URI = "mongodb://localhost:27017/TodoApp";
-} else if(env==='test') {
-    process.env.PORT = 3000;
-    process.env.MONGODB_URI = "mongodb://localhost:27017/TodoAppTest";
-} else {
-    // production case
-    // How to set up the non heroku MONGODB_URI?
+if(env==='development' || env ==='test') {
+    // The production case not in here.
+    const config = require('./config.json');
+    // console.log(JSON.stringify(config,undefined,2));
+
+    const envConfig = config[env];
+    // console.log(JSON.stringify(envConfig,undefined,2));
+
+    Object.keys(envConfig).forEach(key => {
+        process.env[key] = envConfig[key];
+    });
 }
